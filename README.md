@@ -1,7 +1,16 @@
 # Homeworld SDL for IRIX
 
+*********************************************
+
+
 This fork of HomeworldSDL is for Silicon Graphics IRIX 6.5.x
 See [README.IRIX.md](/IRIX/README.IRIX.md) for more information.
+
+
+*********************************************
+
+
+
 
 
 [Homeworld] is a 3D space real-time strategy game released in 1999.
