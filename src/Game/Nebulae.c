@@ -181,7 +181,8 @@ real32 _fabs(real32 n)
 {
     return (n < 0.0f) ? -n : n;
 }
-
+/* temporarily  DISABLED for IRIX */
+#ifndef __sgi
 static real32 fsin(real32 a)
 {
     return (real32)sin((double)a);
@@ -191,7 +192,7 @@ static real32 fcos(real32 a)
 {
     return (real32)cos((double)a);
 }
-
+#endif
 void nebHomogenize(hvector* h)
 {
     real32 oneOverW;

@@ -46,6 +46,11 @@
     #define wcscasecmp    wcsicmp
 #endif
 
+#ifdef __sgi
+    /* TODO: find better replacement*/
+    #define wcscasecmp    strcmp
+#endif
+
 #if !defined _MSC_VER
     #include <strings.h>
 #endif
@@ -385,8 +390,8 @@ mgCommandInfo mgCommandSpanish[] =
 {
     {"Ignorar",     mgProcessIgnore,    1,  0,  1,  0   },
     {"Acabar",      mgProcessKick,      1,  1,  0,  1   },
-    {"Prohibición", mgProcessBan,       1,  1,  0,  1   },
-    {"Límite",      mgProcessLimit,     0,  1,  0,  1   },
+    {"Prohibiciï¿½n", mgProcessBan,       1,  1,  0,  1   },
+    {"Lï¿½mite",      mgProcessLimit,     0,  1,  0,  1   },
     {"",            NULL,               0,  1,  0,  1   }
 };
 

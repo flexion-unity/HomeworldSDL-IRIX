@@ -18,31 +18,53 @@ int fqInitDequant(void) {
 	return OK;
 }
 
+#if FIX_ENDIAN 
+udword fqUnpack(udword nLen, udword nPos, char *aBlock) {
+	/* for big endian */
+	udword shift, mask, value;
+	shift = nPos - nPos / 8 * 8;
+	mask = ((1 << nLen) - 1) << shift;
+	memcpy(&value, (aBlock + nPos / 8), 4);
+	value = ((value>>24)&0x00ff) | ((value>>8)&0x00ff00) | ((value<<8) & 0x00ff0000) | ((value<<24)&0xff000000);
+	return (value & mask) >> shift;
+}
 sdword fqSUnpack(udword nLen, udword nPos, char *aBlock) {
+	/* for big endian */
 	udword shift, mask;
+	sdword value;
+	shift = nPos - nPos / 8 * 8;
+	mask = ((1 << nLen) - 1) << shift;
+	memcpy(&value, (aBlock + nPos / 8), 4);
+	value = ((value>>24)&0x00ff) | ((value>>8)&0x00ff00) | ((value<<8) & 0x00ff0000) | ((value<<24)&0xff000000);
 
+	if ((value & mask) >> shift >> (nLen - 1) == 1) {
+		return (sdword)0 - (((value & mask) >> shift << (33 - nLen)) >> (33 - nLen));
+	}
+	return (sdword)((value & mask) >> shift);
+}
+#else
+udword fqUnpack(udword nLen, udword nPos, char *aBlock) {
+	/* the original unmodified function for little endian */
+    udword shift, mask;
+	shift = nPos - nPos / 8 * 8;
+	mask = ((1 << nLen) - 1) << shift;
+	return (*(udword*)(aBlock + nPos / 8) & mask) >> shift;
+}
+sdword fqSUnpack(udword nLen, udword nPos, char *aBlock) {
+	/* the original unmodified function for little endian */
+	udword shift, mask;
 	shift = nPos - nPos / 8 * 8;
 	mask = ((1 << nLen) - 1) << shift;
 	if ((*(udword*)(aBlock + nPos / 8) & mask) >> shift >> (nLen - 1) == 1) {
 		return (sdword)0 - (((*(udword*)(aBlock + nPos / 8) & mask) >> shift << (33 - nLen)) >> (33 - nLen));
 	}
-
 	return (sdword)((*(udword*)(aBlock + nPos / 8) & mask) >> shift);
 }
-
-udword fqUnpack(udword nLen, udword nPos, char *aBlock) {
-	udword shift, mask;
-
-	shift = nPos - nPos / 8 * 8;
-	mask = ((1 << nLen) - 1) << shift;
-
-	return (*(udword*)(aBlock + nPos / 8) & mask) >> shift;
-}
+#endif
 
 int fqDequantBlock(char *aQBlock, float *aFPBlock, float *aFSBlock, unsigned char *aEBlock, udword nLen, udword nRate, udword nSize) {
 	udword pos, count, ua, ub, uc, ud, u, i;
 	sdword j, s;
-
 	memset(aFPBlock, 0, FQ_SIZE * sizeof(float));
 	memset(aFSBlock, 0, FQ_SIZE * sizeof(float));
 
@@ -56,8 +78,7 @@ int fqDequantBlock(char *aQBlock, float *aFPBlock, float *aFSBlock, unsigned cha
 	ud = fqUnpack(4, pos, aQBlock);
 	pos += 4;
 
-	if ((ua & 1) == 1)
-		memset(aEBlock, 0, FQ_SIZE);
+	if ((ua & 1) == 1) memset(aEBlock, 0, FQ_SIZE);
 
 	if (ub > 0 && uc > 0) {
 		count = 0;

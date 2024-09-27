@@ -1,14 +1,12 @@
 Homeworld SDL - README
-Version 0.3 alpha
+
 http://www.thereisnospork.com/projects/homeworld/
 ---
 
-Homeworld © 1999-2000 Sierra On-Line, Inc.  All Rights Reserved.
+Homeworld ï¿½ 1999-2000 Sierra On-Line, Inc.  All Rights Reserved.
 Homeworld is a registered trademark, and Sierra and Sierra Studios are
 registered trademarks of Sierra On-Line, Inc.  Relic is a trademark of Relic
 Entertainment, Inc.
-
-SDL/Linux port by Ted Cipicchio <ted@thereisnospork.com>
 
 ------------------------------------------------------------------------------
 
@@ -23,9 +21,8 @@ Homeworld, a 3D real-time strategy game set in space.  Homeworld, originally
 released in 1999, was dubbed "Game of the Year" by PC Gamer and "Strategy Game
 of the Year" by Computer Gaming World.
 
-This a Linux port of the Homeworld code released by Relic.  It is still in a
-very early state, and many of the features (and stability) of the Windows
-version are not yet implemented.
+This is a fork of the linux port with modifications to run on Silicon Graphics
+IRIX systems with big endian byte order. It's WIP.
 
 ------------------------------------------------------------------------------
 

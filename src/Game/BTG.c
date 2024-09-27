@@ -262,6 +262,21 @@ real32 btgGetPhi(void)
     return(-btgPhiOffset);
 }
 
+struct __attribute__((__packed__)) _TGAHdr {
+    unsigned char idLength;
+    unsigned char colorMapType;
+    unsigned char imageType;
+    unsigned short colorMapStartIndex;
+    unsigned short colorMapNumEntries;
+    unsigned char colorMapBitsPerEntry;
+    signed short imageOffsetX;
+    signed short imageOffsetY;
+    unsigned short imageWidth;
+    unsigned short imageHeight;
+    unsigned char pixelDepth;
+    unsigned char imageDescriptor;
+};
+
 /*-----------------------------------------------------------------------------
     Name        : btgGetTexture
     Description : creates a GL texture object with the contents of the given .TGA file
@@ -371,9 +386,7 @@ void btgGetTexture(char* filename, udword* thandle, sdword* width, sdword* heigh
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, *width, *height,
-                     0, GL_RGBA, GL_UNSIGNED_BYTE, pdata);
-
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, *width, *height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pdata);
         memFree(data);
     }
     else
@@ -384,6 +397,76 @@ void btgGetTexture(char* filename, udword* thandle, sdword* width, sdword* heigh
     }
 }
 
+void btgGetTextureBigEndian(char* filename, udword* thandle, sdword* width, sdword* height) {
+    /* this one uses a packed struct tga header for IRIX big endian */
+    char   fullname[64];
+    ubyte* data;
+    ubyte* pdata;
+    ubyte* bp;
+    unsigned short* psdata;
+    sdword i;
+
+    struct _TGAHdr* tgahdr;
+
+    strcpy(fullname, "btg/bitmaps/");
+    strcat(fullname, filename);
+
+    if (fileExists(fullname, 0)) {
+        fileLoadAlloc(fullname, (void**)&data, 0);
+        if ((tgahdr = malloc(sizeof(*tgahdr))) == NULL) {
+            fprintf(stderr, "MALLOC tgahdr ERROR");
+            *thandle = 0;
+            *width   = 0;
+            *height  = 0;
+            return;
+        }
+        memcpy(tgahdr, data, sizeof(*tgahdr));
+        pdata = data;
+    
+#if FIX_ENDIAN
+        tgahdr->colorMapStartIndex = __builtin_bswap16(tgahdr->colorMapStartIndex);
+        tgahdr->colorMapNumEntries = __builtin_bswap16(tgahdr->colorMapNumEntries);
+        tgahdr->colorMapBitsPerEntry = __builtin_bswap16(tgahdr->colorMapNumEntries);
+        tgahdr->imageOffsetX = __builtin_bswap16(tgahdr->imageOffsetX);
+        tgahdr->imageOffsetY = __builtin_bswap16(tgahdr->imageOffsetY);
+        tgahdr->imageWidth = __builtin_bswap16(tgahdr->imageWidth);
+        tgahdr->imageHeight = __builtin_bswap16(tgahdr->imageHeight);
+#endif // FIX_ENDIAN
+
+        //only 32bit TGAs
+        dbgAssertOrIgnore(tgahdr->pixelDepth == 32);
+
+        *width  = (sdword)tgahdr->imageWidth;
+        *height = (sdword)tgahdr->imageHeight;
+
+        // looks like image data starts 18 bytes into pdata + idLength
+        pdata += sizeof(*tgahdr) + tgahdr->idLength;
+        //convert to GL_RGBA
+        for (i = 0, bp = pdata; i < 4*(*width)*(*height); i += 4, bp += 4) {
+            ubyte r, b;
+            r = bp[0];
+            b = bp[2];
+            bp[0] = b;
+            bp[2] = r;
+            bp[3] = (ubyte)(255 - (int)bp[3]);
+        }
+        
+        //create the GL texture object
+        glGenTextures(1, thandle);
+        glBindTexture(GL_TEXTURE_2D, *thandle);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, *width, *height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pdata);
+
+        memFree(data);
+    } else {
+        *thandle = 0;
+        *width   = 0;
+        *height  = 0;
+    }
+}
 /*-----------------------------------------------------------------------------
     Name        : btgTexInList
     Description : determines whether a given bitmap has already been loaded
@@ -796,7 +879,8 @@ void btgLoad(char* filename)
             udp = (udword*)instarp;
 
 #if FIX_ENDIAN
-            length = FIX_ENDIAN_INT_32( (sdword)*udp );
+            length = FIX_ENDIAN_INT_32( (sdword)*instarp );
+            length = 7; // ugly temporary hack to prevent crash  ! TODO !
 #else
             length = (sdword)*udp;
 #endif
@@ -818,13 +902,14 @@ void btgLoad(char* filename)
             memcpy(outstarp->filename, filename, 48);
 
             //create a GL texture object
-            if (!btgTexInList(filename))
-            {
-                btgGetTexture(filename, &outstarp->glhandle, &outstarp->width, &outstarp->height);
+            if (!btgTexInList(filename)) {
+                #if FIX_ENDIAN
+                    btgGetTextureBigEndian(filename, &outstarp->glhandle, &outstarp->width, &outstarp->height);
+                #else
+                    btgGetTexture(filename, &outstarp->glhandle, &outstarp->width, &outstarp->height);
+                #endif                
                 btgAddTexToList(filename, outstarp->glhandle, outstarp->width, outstarp->height);
-            }
-            else
-            {
+            } else {
                 btgFindTexture(filename, outstarp);
             }
         }

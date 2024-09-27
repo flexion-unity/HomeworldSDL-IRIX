@@ -2669,6 +2669,13 @@ sdword musicEventPlay(sdword tracknum)
     MUSICINFO *pinfo;
     MUSICSTREAM *pmstream = &musicheader->mstreams[musictranslatetracknum(tracknum)];
 
+// TODO: probably not the right place for this. Should be done at the source of pmstream to prevent converting again
+#if FIX_ENDIAN
+    pmstream->offset = FIX_ENDIAN_INT_32( pmstream->offset ); // OK
+    pmstream->flags = FIX_ENDIAN_INT_16( pmstream->flags );
+    pmstream->bitrate = FIX_ENDIAN_INT_16( pmstream->bitrate );
+#endif
+
     if (enableSpeech)
     {
         if ((tracknum <= MUS_LAST_LEVELTUNE) && (tracknum >= MUS_FIRST_AMBIENT))

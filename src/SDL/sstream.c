@@ -729,8 +729,14 @@ sdword ssSubtitleRead(STREAMHEADER *header, filehandle handle, sdword actornum, 
     udword currentOffset = 0;
 #endif //VCE_BACKWARDS_COMPATIBLE
 
-    length = fileBlockRead(handle, header, sizeof(STREAMHEADER));//read in the "INFO" and length
-    dbgAssertOrIgnore(length == sizeof(STREAMHEADER));
+	length = fileBlockRead(handle, header, sizeof(STREAMHEADER));//read in the "INFO" and length
+
+#if FIX_ENDIAN
+	header->ID = FIX_ENDIAN_INT_32(header->ID);
+	header->size = FIX_ENDIAN_INT_32(header->size);
+#endif
+
+	dbgAssertOrIgnore(length == sizeof(STREAMHEADER));
     if (header->ID != ID_STREAM_INFO)
     {                                                       //if we didn't read "INFO"
         //!!!dbgAssertOrIgnore(header->ID == ID_STREAM_DATA);            //it must have been "DATA"
@@ -926,7 +932,7 @@ sdword isoundstreamreadheader(STREAM *pstream)
 		if (pstream->header.ID != ID_STREAM_DATA)
 		{
 			/* this is not stream data */
-			dbgMessage("soundstreamreadheader: bad ID");
+			dbgMessage("soundstreamreadheader: bad ID (not ID_STREAM_DATA)");
             return (-3);	//(SOUND_ERR);
 		}
 

@@ -33,5 +33,5 @@ homeworld_LDADD = $(HW_LIBS) $(DEP_LIBS) @SDL_LIBS@ $(GL_LIBS) $(MOVIE_LIBS) $(N
 else
 homeworld_LDADD = $(HW_LIBS) $(DEP_LIBS) -lX11 @SDL_LIBS@ $(GL_LIBS) $(MOVIE_LIBS) $(NET_LIBS)
 endif
-homeworld_LDFLAGS = -Wl,--as-needed
+homeworld_LDFLAGS = /usr/lib32/libX11.so.1 /usr/lib32/libXext.a /usr/lib32/libXt.a /usr/lib32/libXm.so.1 /usr/lib32/libXpm.so.1 -Wl,--allow-shlib-undefined -Wl,-rpath-link=/usr/lib32 -Wl,-rpath=/usr/lib32:/usr/sgug/lib32 -Wl,--as-needed
 

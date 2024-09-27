@@ -27,6 +27,10 @@
 #define FQ_PGEN			0
 #define FQ_PADD			1
 
+#ifdef __sgi
+#include "Types.h"
+#endif
+
 // Structures
 typedef struct
 {

@@ -221,9 +221,17 @@ sdword soundinit(bool mode)
 
 	// Set up wave format structure.
 	aspec.freq = FQ_RATE;
+
+// https://documentation.help/SDL/sdlaudiospec.html
+#if FIX_ENDIAN
+	aspec.format = AUDIO_S16MSB;
+	aspec.samples = 4096; // larger value for our old MIPS macheens
+#else
 	aspec.format = AUDIO_S16;
-	aspec.channels = 2;
 	aspec.samples = SDL_BUFFERSIZE;
+#endif
+	aspec.channels = 2;
+
 	aspec.callback = soundfeedercb;
 	aspec.userdata = NULL;
 
@@ -453,7 +461,14 @@ udword soundbankadd(void *bankaddress)
 	sdword numpatches;
 
 	/* point the global bank pointer to the bank header */
-	bank = (BANK *)bankaddress;
+	bank = (BANK *) bankaddress;
+
+#if FIX_ENDIAN /* added by flx */
+	bank->numpatches = FIX_ENDIAN_INT_32(bank->numpatches);
+	bank->firstpatch = FIX_ENDIAN_INT_32(bank->firstpatch);
+	bank->checksum = FIX_ENDIAN_INT_32(bank->checksum);
+	bank->id = FIX_ENDIAN_FLOAT_32(bank->id);	
+#endif
 
 	/* check bank ID */
 
@@ -465,6 +480,17 @@ udword soundbankadd(void *bankaddress)
 	/* figure out where the patch data starts */
 	for (i = 0; i < numpatches; i++)
 	{
+
+// bnk files are read from the original Homeworld.big file, not .64 files :(
+#if FIX_ENDIAN
+	patches[i].datasize = FIX_ENDIAN_INT_32(patches[i].datasize);
+	patches[i].dataoffset = FIX_ENDIAN_INT_32(patches[i].dataoffset);
+	patches[i].loopend = FIX_ENDIAN_INT_32(patches[i].loopend);
+	patches[i].loopstart = FIX_ENDIAN_INT_32(patches[i].loopstart);
+	patches[i].bitrate = FIX_ENDIAN_INT_16(patches[i].bitrate);
+	patches[i].flags = FIX_ENDIAN_INT_16(patches[i].flags);
+#endif
+
 		patches[i].dataoffset = (smemsize)bankaddress + patches[i].dataoffset;
 		patches[i].loopstart += patches[i].dataoffset;
 		patches[i].loopend += patches[i].dataoffset;
