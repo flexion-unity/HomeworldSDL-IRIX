@@ -1,38 +1,23 @@
 # Homeworld SDL for IRIX
 
+This is a fork of [HomeworldSDL](https://github.com/HomeworldSDL/HomeworldSDL) for Silicon Graphics IRIX 6.5.x with big endian byte order.\
+\
+To play homeworld on IRIX:\
+- install SGUG-RSE on your SGI box
+- install SGUG-RSE SDL2 with GL support!!
+- download the homeworld executable for IRIX and HomeworldSDL.big from the [Releases]
+- copy [required files](#asset-checklist) from your homeworld CD-ROM
+- run the game
+\
 *********************************************
-
-
-This fork of HomeworldSDL is for Silicon Graphics IRIX 6.5.x
-See [README.IRIX.md](/IRIX/README.IRIX.md) for more information.
-
-
-*********************************************
-
-
-
-
-
-[Homeworld] is a 3D space real-time strategy game released in 1999.
-Its source code was [released in 2003] by [Relic Entertainment], allowing a small but dedicated community of fans to port it to [SDL], enabling native versions for Linux, MacOS, and more recently, web browsers.
-
-💬 Join our [matrix space] or [discord]
-
-⚠️ Instructions below are unmaintained, and probably outdated. Please check one of the forks above first.
-
-[matrix space]: https://matrix.to/#/#homeworld-sdl:matrix.org
-[discord]: https://discord.gg/3hTsAsargq
-[SDL]: https://en.wikipedia.org/wiki/Simple_DirectMedia_Layer
-[Homeworld]: https://en.wikipedia.org/wiki/Homeworld
-[released in 2003]: http://www.insidemacgames.com/news/story.php?ArticleID=8516
-[Relic Entertainment]: https://www.relic.com/
-[Gardens of Kadesh]: https://gardensofkadesh.github.io/
-[Tenhauser Gate]: https://gitlab.com/homeworldsdl/TenhauserGate
-
-## Installing
-
-### Requirements
-
+\
+\
+\
+[Homeworld](https://en.wikipedia.org/wiki/Homeworld) is a 3D space real-time strategy game released in 1999.
+Its source code was [released in 2003](http://www.insidemacgames.com/news/story.php?ArticleID=8516) by [Relic Entertainment](https://www.relic.com/), allowing a small but dedicated community of fans to port it to SDL.
+\
+\
+\
 This repository contains only the source code for Homeworld's engine (metaphorically, the skeleton). In order to have a playable game, you will need the original assets (artwork, textures, sounds, meshes, ... Metaphorically again, the flesh).
 
 So make sure you have:
@@ -97,8 +82,6 @@ Once the game has launched, you need to:
  The game will now attempt to switch to the OpenGL renderer.  
  If everything goes okay, you should be presented with a confirmation that the settings you requested were changed.  Select "Yes", and you should be ready to go!
 
-## [About][wiki]
+## More information
 
-If you want to know more about this project (and see some screenshots!), please head over to the [wiki].
-
-[wiki]: https://github.com/HomeworldSDL/HomeworldSDL/wiki
+For more information or ports for other platforms than IRIX, please visit the original repository of [HomeworldSDL](https://github.com/HomeworldSDL/HomeworldSDL).

@@ -28,6 +28,18 @@ IRIX systems with big endian byte order. It's WIP.
 
 * Frequently Unasked Questions (FUQ) *
 
+
+# Troubleshooting
+
+Q. I try to run this on a SGI O2 with CRM graphics and the game won't start :(
+
+A. Default graphics detail settings might be too high for this setup and the games 
+   refuses to start. Check ~/.homeworld/Homeworld.cfg and adjust window resolution 
+   to a lower one, also disable fullscreen. Once you're able to start the app to 
+   get to the home screen, go to options and set graphics details to a lower level. 
+
+---
+
 Q. When I try to run the game, I get the message "Invalid or missing Homeworld
    CD. Please insert valid CD." on the command line.
 
