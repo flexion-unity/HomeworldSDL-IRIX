@@ -163,9 +163,8 @@ sdword enableTextures = TRUE;
 sdword enableSmoothing = TRUE;
 sdword enableStipple = FALSE;
 sdword enableTrails = TRUE;
-#if TR_NIL_TEXTURE
 bool GLOBAL_NO_TEXTURES = FALSE;
-#endif
+
 
 // turn fullscreen off when debugging so that if the debugger kicks in
 // after a crash you don't find yourself locked out and have to reboot...
@@ -196,9 +195,7 @@ bool8 RENDER_LIGHTLINES = FALSE;
 bool enableTextFeedback = FALSE;
 #endif
 
-#if FEF_TEXTURES_DISABLABLE
 bool fetEnableTextures = TRUE;
-#endif
 bool noDefaultComputerPlayer = FALSE;
 bool8 ComputerPlayerEnabled[MAX_MULTIPLAYER_PLAYERS] = { FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE };
 //udword ComputerPlayerLevel[MAX_MULTIPLAYER_PLAYERS] = {2,2,2,2,2,2,2,2};
@@ -654,9 +651,9 @@ commandoption commandOptions[] =
 #endif
 #endif
     entryVr("/ignoreBigfiles",      IgnoreBigfiles, TRUE,               " - don't use anything from bigfile(s)"),
-#ifdef HW_BUILD_FOR_DEBUGGING
+
     entryFV("/logFileLoads",        EnableFileLoadLog,LogFileLoads,TRUE," - create log of data files loaded"),
-#endif
+
 
     entryComment("PROCESSOR OPTIONS"),//-----------------------------------------------------
     entryVr("/enableSSE",           mainAllowKatmai, TRUE,              " - allow use of SSE if support is detected."),
@@ -664,10 +661,10 @@ commandoption commandOptions[] =
     entryVr("/enable3DNow",         mainAllow3DNow, TRUE,               " - allow use of 3DNow! if support is detected."),
 
     entryComment("SOUND OPTIONS"),  //-----------------------------------------------------
-#if SE_DEBUG
+
     entryVr("/noSound",             enableSFX, FALSE,                   " - turn all sound effects off."),
     entryVr("/noSpeech",            enableSpeech, FALSE,                " - turn all speech off."),
-#endif
+
     entryVr("/dsound",              useDSound, TRUE,                    " - forces mixer to write to DirectSound driver, even if driver reports not certified."),
     entryVr("/dsoundCoop",          coopDSound, TRUE,                   " - switches to co-operative mode of DirectSound (if supported) to allow sharing with other applications."),
     entryVr("/waveout",             useWaveout, TRUE,                   " - forces mixer to write to Waveout even if a DirectSound supported object is available."),
@@ -678,15 +675,15 @@ commandoption commandOptions[] =
     entryVr("/noBG",                showBackgrounds, FALSE,             " - disable display of galaxy backgrounds."),
     entryVr("/noFilter",            texLinearFiltering,FALSE,           " - disable bi-linear filtering of textures."),
     entryVr("/noSmooth",            enableSmoothing, FALSE,             " - do not use polygon smoothing."),
-#if TR_NIL_TEXTURE
+
     entryVr("/nilTexture",          GLOBAL_NO_TEXTURES,TRUE,            " - don't ever load textures at all."),
-#endif
+
 #if ETG_DISABLEABLE
     entryVr("/noEffects",           etgEffectsEnabled,FALSE,            " - disable all effects (Debug only)."),
+
 #endif
-#if FEF_TEXTURES_DISABLABLE
     entryVr("/NoFETextures",        fetEnableTextures, FALSE,           " - turns off front end textures"),
-#endif
+
     entryVr("/stipple",             enableStipple, TRUE,                " - enable stipple alpha with software renderer."),
     entryVr("/noShowDamage",        gShowDamage, FALSE,                 " - Disables showing ship damage effects."),
 

@@ -138,8 +138,8 @@ void ssTakeScreenshot(void)
         (void *)VirtualAlloc(NULL, 3 * MAIN_WindowWidth * MAIN_WindowHeight,  // 3 = RGB
             MEM_COMMIT, PAGE_READWRITE);
 #else
-        mmap(NULL, 3 * MAIN_WindowWidth * MAIN_WindowHeight,
-            PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+        // mmap(NULL, 3 * MAIN_WindowWidth * MAIN_WindowHeight, PROT_READ | PROT_WRITE, MAP_PRIVATE, -1, 0);
+        malloc(3 * MAIN_WindowWidth * MAIN_WindowHeight);
 #endif
 
     if (screenshot_buffer != NULL)

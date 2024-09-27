@@ -56,6 +56,10 @@
     #include <wchar.h>
 #endif
 
+#ifdef __sgi
+    /* TODO: find better replacement*/
+    #define wcscasecmp    strcmp
+#endif
 
 /*=============================================================================
     Defines:

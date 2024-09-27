@@ -8,6 +8,10 @@
 
 #include "AIPlayer.h"
 
+#ifdef __sgi
+#include <limits.h>
+#endif
+
 #include "AIAttackMan.h"
 #include "AIDefenseMan.h"
 #include "AIFleetMan.h"

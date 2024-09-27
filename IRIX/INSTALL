@@ -1,9 +1,6 @@
   *** IMPORTANT BUILD INSTRUCTIONS ***
 
 Homeworld SDL - Source Installation Instructions 
- Version 0.5 alpha? (still?)
- Subversion repository: http://www.homeworldsdl.org
- Current Subversion revision as of this update: 391
 
 Homeworld SDL maintainer: 
  Laurence Passmore <lmop@homeworldsdl.org> 
@@ -16,62 +13,29 @@ are registered trademarks of Sierra On-Line, Inc.  Relic is a
 trademark of Relic Entertainment, Inc. 
  
  ---------------------------------------------------------------------
-
- Please read through the following instructions if you plan to build
-and run Homeworld SDL: 
  
-Contents:
-	-Note-
-	-System requirements-
-	-Compiling the source code-	
-	-Important Build Options-
-	-Usage and placement of the game data files-
-	-Starting the game-
-	-Troubleshooting-
-	-Kdevelop IDE-
+ -System requirements for IRIX-
 
- -Note-
-
- Homeworld SDL is still in development, and as such the code is somewhat of a mess right now.  Since Homeworld was not designed to be compiled and installed using the typical "configure/make/make install" process found with most open source Unix software, you'll need to keep a few things in mind while trying to get the game running. 
- 
- -System requirements-
-
- SDL 1.2.11 
- GCC 3.3 or later.
-
-GCC 3.x versions prior to 3.3 have problems compiling various sections of the Homeworld code and will crash upon the attempt.  GCC 2.95.x does not provide support for SSE/SSE2 instructions and will not work. 
- 
-GCC 4.x is now working after resolving cast and compile issues, and removing the requirement to use -fwritable strings.
-
-There is a strong sentiment among many people to rewrite the codebase to modern standards, and even talk of aiming for a 64-bit branch as well, but it will take time. 
+ SDL 2 from SGUG-RSE with GL support (!!)
+ GCC (SGUG-RSE)
  
  -Compiling the source code-
 
 You need to have at least the following packages installed:
 
- * SDL development files (version 1.2.11 or later) see *1
-   - you may get a linkage error against X symbols on earlier ones.
-     This can probably be repaired by adding -lX11 -lXext on src/Makefile.am.
+ * SDL2 development files
  * flex (any recent version will do)
  * bison (any recent version will do)
  * autotools set: autoconf, automake (1.9), libtool
  * YACC (any recent version will do)
 
-	* See also: -If you're compiling libsdl-
-
 The build process itself is relatively straightforward. Running the bootstrap script found in this directory with "./bootstrap" will set up the files needed and then doing "../configure" (that's "period period slash configure") followed by "make" will build the required files and then the binary. Type "../configure --help" for more information on build options.
 
  ./bootstrap
- ../configure 
+ ./configure_irix.sh
  make
 
-If "make" is successful then the "homeworld' binary will be located in the "src" directory created just now within the "Linux" directory. 
-
-If you're inclined to install the game then
-
- make install
-
-should do the trick. 
+If "make" is successful then the "homeworld' binary will be located in the "src" directory created just now within the "IRIX" directory. 
 
  -Usage and placement of the game data files-
 
@@ -122,58 +86,3 @@ Go to the projects 'src' directory. "./homeworld".
  
  The settings you choose will also be saved when you quit, so you don't have to reselect the OpenGL renderer every time. 
 
- -Important Build Options-
-
- * If you find some problematic bug in HWSDL Linux, you could try reconfiguring with 
- ./configure --enable-linuxfixme && make
- This will activate all bug work arounds in place for Linux (if any) which may fix your problems.
-
-
- -Troubleshooting-
-
- * if you get this error while compiling HWSDL: "wgl.c:9:27: X11/Xutil.h: No such file or directory"
-try installing "libx11-dev".
-
- ------------------------------------------------------------------------------ 
- 
- *** UPGRADING FROM HOMEWORLD SDL 0.2? *** 
- 
- As of Homeworld SDL 0.3, the location of saved games has moved. Saved games are now stored within the ".homeworld" directory in your home directory.  To use your old saved games, just move the "SavedGames" directory from the game directory to "~/.homeworld". Note that saved games from the Windows version of Homeworld and Homeworld SDL versions prior to 0.2 still do not work with recent versions of Homeworld SDL.  Also, the game directory no longer needs to be writable for users who want to run the game. 
- 
- ------------------------------------------------------------------------------ 
- 
- *** A NOTE ABOUT OPTIMIZATION *** 
- 
- Various parts of the Homeworld source code do not play particularly well when compiler optimization is enabled (i.e. using the "-O" or "-O[123]" flags with GCC).  The source files containing such problem areas have been pinpointed in the game code, and steps have been made to disable optimization for these files until the code can be altered such that enabling optimization won't thrash the output.  On the other hand, there are issues with the software renderer that affect 2D drawing (such as the menus) which have not been pinpointed yet.  For the time being, the software renderer cannot be built with compiler optimizations, so optimization has been disabled for ALL of the rgl library code. 
- 
- Also of note is that the "-fomit-frame-pointer" flag should not be used, as Homeworld uses various assembly techniques that rely on the frame pointer for many functions.  While the original Windows version uses "#pragma" statements to force this on a per-function basis, GCC only provides the "-fno-omit-frame-pointer" flag to force the frame pointer on a per-file basis. Because of this, most of the game will be compiled with support for the frame pointer regardless of the optimization level.  In the future, the functions that rely on the frame pointer may be separated from the rest of the code such that the game can benefit from the potential speed increase provided by the "-fomit-frame-pointer" flag. 
-
-
- ----------------------------------------------------------------------------------
-  -If you're compiling libsdl-
-
-Before compiling your libsdl, make sure you have these packages installed:
- * libxt-dev
- * mesa-common-dev, libglu1-mesa-dev, libgl1-mesa-dev
-
- -------------------------------------------------------------------------------------
- 	-Kdevelop IDE-
-
-A kdevelop project file is in Linux/
-it uses the custom makefile that ./configure generates.
-
-you should run the project file inside Linux/ , else, change the project directory from ../ to something else.
-
-by default the filelist isn't populated, so kdevelop will prompt you, do allow it to populate the list.
-
-if you don't want kdevelop compiling HWSDL just after you compiled it manually or whatever, then do this:
-project options > run options > turn off 'automatically compile before execution'
-so kdevelop won't want to compile each time you want to debug.
-
-	-------------------------------------------------------------------------------------
-
-
-
-*1: use of SDL 1.2.10 is not recommended.
-- HWSDL won't exit properly and will lock your mouse.
-- librgl*.so won't be found unless put in /usr/lib

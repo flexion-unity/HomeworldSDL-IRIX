@@ -10,6 +10,10 @@
 
 #include <stdio.h>
 
+#ifdef __sgi
+#include <limits.h>
+#endif
+
 #ifdef __FreeBSD__
 #include <sys/syslimits.h>
 #endif

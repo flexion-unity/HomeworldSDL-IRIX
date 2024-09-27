@@ -2623,6 +2623,7 @@ llelement *trListFileLoad(char *name, sdword *number)
 #if FIX_ENDIAN
                 // anonymous block so I can declare i with limited scope and not have
                 // a plain C compiler complain
+/*  TODO: temporarily disabled. causes BUS ERROR on IRIX
                 {
                     int  i = 0;
                     for( i = 0; i < list[index].nShared; i++ )
@@ -2630,6 +2631,7 @@ llelement *trListFileLoad(char *name, sdword *number)
                         list[index].sharedTo[i] = FIX_ENDIAN_INT_32( list[index].sharedTo[i] );
                     }
                 }
+*/
 #endif
             }
         }

@@ -122,6 +122,13 @@
     #include <sys/types.h>
     #include <sys/mman.h>
     #include <unistd.h>
+#elif defined(__sgi)
+    #include <fcntl.h>
+    #include <sys/types.h>
+    #include <sys/mman.h>
+    #include <unistd.h>
+    #include <X11/Xlib.h>
+    #include <X11/keysym.h>
 #else
     #include <sys/mman.h>
     #include <unistd.h>
@@ -3524,7 +3531,8 @@ void *utyGrowthHeapAlloc(sdword size)
 #ifdef _WIN32
     return((void *)VirtualAlloc(NULL, size, MEM_COMMIT, PAGE_READWRITE));
 #else
-    return mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+    // return mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+    return malloc(size);
 #endif
 }
 
@@ -3837,6 +3845,11 @@ char* utyGameSystemsPreInit(void)
 		int page_size = getpagesize();
 		newSize = (sdword)((real32)phys_pages * (real32)page_size
             * MEM_HeapDefaultScalar);
+#elif defined(__sgi)
+		int phys_pages = 32768;
+		int page_size = getpagesize();
+		newSize = (sdword)((real32)phys_pages * (real32)page_size
+            * MEM_HeapDefaultScalar);
 #else
         long phys_pages = sysconf(_SC_PHYS_PAGES);
         long page_size = sysconf (_SC_PAGE_SIZE);
@@ -3852,8 +3865,8 @@ char* utyGameSystemsPreInit(void)
 #ifdef _WIN32
     utyMemoryHeap = (void *)VirtualAlloc(NULL, MemoryHeapSize + sizeof(memcookie) * 4, MEM_COMMIT, PAGE_READWRITE);
 #else
-    utyMemoryHeap = mmap(0, MemoryHeapSize + sizeof(memcookie) * 4,
-        PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+    // utyMemoryHeap = mmap(0, MemoryHeapSize + sizeof(memcookie) * 4, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);    
+    utyMemoryHeap = malloc(MemoryHeapSize + sizeof(memcookie) * 4);    
 #endif
 
     if (utyMemoryHeap == NULL)
