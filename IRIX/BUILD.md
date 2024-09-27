@@ -32,6 +32,6 @@ cd tools/biggie
 cd ../../HomeworldSDL_big
 ./convert_directory_to_big_file
 ```
-Note: this is untested. If it doesn't work, use linux to compile the bigfile.
+Note: this is untested. If this doesn't work, use linux to compile the bigfile.
 
 You should now have a `HomeworldSDL.big` file in the root of the repo.
