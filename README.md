@@ -2,13 +2,12 @@
 
 This is a fork of [HomeworldSDL](https://github.com/HomeworldSDL/HomeworldSDL) for Silicon Graphics IRIX 6.5.x with big endian byte order.\
 \
-To play homeworld on IRIX:\
-- install SGUG-RSE on your SGI box
+To play homeworld on IRIX:
 - install SGUG-RSE SDL2 with GL support!!
 - download the homeworld executable for IRIX and HomeworldSDL.big from the [Releases]
 - copy [required files](#asset-checklist) from your homeworld CD-ROM
 - run the game
-\
+
 *********************************************
 \
 \
@@ -43,16 +42,15 @@ Usually you will find these files in your installation folder. For more detailed
 
 #### Extracting game assets with wine
 
-Install the game and patch with [wine] (tested with wine 4.1)
+Install the game and patch with [wine](https://www.winehq.org/) (tested with wine 4.1)
 
 ``` sh
 wine HWSetup.EXE
 wine si_homeworld_update_105.exe
 ```
 
-Open the game installation folder (usually `~/.wine/drive_c/Sierra/Homeworld`). This is where you'll find the [required files](#asset-checklist). We'll be getting back at them later on.
+Open the game installation folder (usually `~/.wine/drive_c/Sierra/Homeworld`). This is where you'll find the [required files](#asset-checklist).
 
-[wine]: https://www.winehq.org/
 
 #### Installing the binary distribution
 
