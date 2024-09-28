@@ -5,13 +5,6 @@
 
 .vscode
 
-Mac/build
-Mac/Homeworld.xcodeproj/*.mode*
-Mac/Homeworld.xcodeproj/*.pbxuser
-Mac/Homeworld.xcodeproj/project.xcworkspace/xcuserdata/
-Mac/Homeworld.xcodeproj/xcuserdata/
-Mac/SDL2.framework
-
 src/Missions/Generated
 
 tools/biggie/biggie
@@ -21,14 +14,14 @@ tools/kas2c/lexer.c
 tools/kas2c/parser.c
 tools/kas2c/parser.h
 
-Linux/Makefile
-Linux/config.h
-Linux/config.log
-Linux/config.status
-Linux/libtool
-Linux/src
-Linux/stamp-h1
-Linux/tools
+IRIX/Makefile
+IRIX/config.h
+IRIX/config.log
+IRIX/config.status
+IRIX/libtool
+IRIX/src
+IRIX/stamp-h1
+IRIX/tools
 
 Makefile.am
 Makefile.in
