@@ -23,16 +23,22 @@ IRIX/src
 IRIX/stamp-h1
 IRIX/tools
 
-Makefile.am
+#Makefile.am
+
+/Makefile.am
+/configure
+/configure.ac
+/acinclude.m4
+/config/
+
 Makefile.in
 aclocal.m4
-acinclude.m4
+#acinclude.m4
 autom4te.cache
 config.h.in
 config.h.in~
-config
-configure
-configure.ac
+#configure
+#configure.ac
 
 cscope.files
 cscope.out
