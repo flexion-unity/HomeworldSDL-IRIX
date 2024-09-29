@@ -567,9 +567,17 @@ sdword speechEventInit(void)
     fileLoadAlloc(loadfile, (void**)&musicheader, NonVolatile);
 
 #if FIX_ENDIAN
+    int si;
 	musicheader->ID = FIX_ENDIAN_INT_32( musicheader->ID );
 	musicheader->checksum = FIX_ENDIAN_INT_32( musicheader->checksum );
 	musicheader->numstreams = FIX_ENDIAN_INT_32( musicheader->numstreams );
+    // adjust array of streams:
+	for (si=0; si<musicheader->numstreams; si++) {
+        MUSICSTREAM *pmstream = &musicheader->mstreams[si];
+        pmstream->offset = FIX_ENDIAN_INT_32( pmstream->offset );
+        pmstream->flags = FIX_ENDIAN_INT_16( pmstream->flags );
+        pmstream->bitrate = FIX_ENDIAN_INT_16( pmstream->bitrate );
+	}
 #endif
 
     /* open music file and compare checksums */
@@ -2668,13 +2676,6 @@ sdword musicEventPlay(sdword tracknum)
 {
     MUSICINFO *pinfo;
     MUSICSTREAM *pmstream = &musicheader->mstreams[musictranslatetracknum(tracknum)];
-
-// TODO: probably not the right place for this. Should be done at the source of pmstream to prevent converting again
-#if FIX_ENDIAN
-    pmstream->offset = FIX_ENDIAN_INT_32( pmstream->offset ); // OK
-    pmstream->flags = FIX_ENDIAN_INT_16( pmstream->flags );
-    pmstream->bitrate = FIX_ENDIAN_INT_16( pmstream->bitrate );
-#endif
 
     if (enableSpeech)
     {
