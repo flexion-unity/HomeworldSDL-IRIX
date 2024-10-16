@@ -1977,7 +1977,7 @@ void gameStart(char *loadfilename)
     {
         udword techLevel = 0;
 
-        dbgMessagef("SYNC NUMBER: %u",gamerand());
+        // dbgMessagef("SYNC NUMBER: %u",gamerand());
 
         if ((!singlePlayerGame) && (!bitTest(tpGameCreated.flag,MG_ResearchEnabled)))
         {
