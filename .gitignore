@@ -22,6 +22,7 @@ IRIX/libtool
 IRIX/src
 IRIX/stamp-h1
 IRIX/tools
+IRIX/lib/libSDL2*
 
 #Makefile.am
 
